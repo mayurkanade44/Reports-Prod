@@ -6,9 +6,6 @@ import {
   directUpload,
   reportHandleChange,
 } from "../redux/reportSlice";
-import { REACT_APP_CQR } from "/etc/secrets/.env";
-
-console.log(REACT_APP_CQR);
 
 const Contract = () => {
   const { search, reportLoading, contract } = useSelector(

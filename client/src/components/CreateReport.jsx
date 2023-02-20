@@ -82,7 +82,6 @@ const CreateReport = () => {
     }
     await dispatch(addPage({ formValue }));
     setFormValue(initialState);
-    ref.current.value = "";
   };
 
   const handleSubmit = (e) => {

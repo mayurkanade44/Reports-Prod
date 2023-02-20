@@ -12,10 +12,10 @@ export const addValues = async (req, res) => {
   try {
     if (finding) {
       await Admin.create({ finding });
-      return res.status(201);
+      return res.status(201).json();
     } else if (suggestion) {
       await Admin.create({ suggestion });
-      return res.status(201);
+      return res.status(201).json();
     } else if (req.files.file) {
       const docFile = req.files.file;
       const docPath = path.join(__dirname, "../files/" + `${docFile.name}`);

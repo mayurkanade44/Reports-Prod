@@ -1,0 +1,237 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+@media (max-width: 767px) {
+  .input-row h4,
+  .img {
+    font-size: 18px;
+    margin-top: 5px;
+  }
+  .input-row .form-control {
+    height: 28px;
+  }
+}
+
+.modal {
+  display: block;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/*---------------------Navbar--------------*/
+
+header {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  background-color: #fff;
+  width: 100%;
+  z-index: 99;
+}
+
+header .header-top {
+  background-color: #fff;
+  border-bottom: 1px solid #d3d7cea6;
+  padding: 7px 7px 3px 7px;
+}
+header .header-top .col-det .ulleft li {
+  float: left;
+  padding: 2px;
+  color: #686968;
+  font-size: 0.9rem;
+}
+.follow-li {
+  padding-top: 12px !important;
+}
+header .header-top .col-det .ulleft li i {
+  margin-right: 5px;
+  color: #bfbfbf;
+}
+header .header-top .col-det .ulleft li span {
+  margin-left: 15px;
+}
+header .header-top .col-det .ulright {
+  float: right;
+}
+.ulleft img,
+.ulright img {
+  width: 23px;
+}
+header .header-top .col-det .ulright li {
+  float: left;
+  padding: 10px;
+  color: #d3d7ce;
+  font-size: 1rem;
+  font-weight: 600;
+}
+header .header-top .col-det .ulright li i {
+  margin-right: 5px;
+  color: #8c8a8a;
+}
+header .header-top .col-det .ulright li small,
+header .header-top .col-det .ulleft li small {
+  color: #8c8a8a;
+  font-weight: 600;
+  font-size: 16px;
+}
+header .header-top .col-det .ulright li span {
+  margin-left: 15px;
+}
+header .header-top .btn-bhed {
+  padding-top: 7px;
+  text-align: center !important;
+}
+header .header-top .btn-bhed .btn {
+  padding: 5px 23px;
+  border-radius: 50px;
+  margin-left: 5px;
+}
+
+.navbar-toggler {
+  position: absolute;
+  right: 0px;
+  border: 0px;
+  padding-top: 15px;
+}
+
+.mobile-nav {
+  height: 40px;
+}
+.mobile-nav img {
+  width: 33px;
+  margin-right: 5px;
+  padding-bottom: 5px;
+}
+
+header .nav-link {
+  margin-left: 20px;
+  font-weight: 600;
+  color: black;
+  font-size: 18px;
+}
+
+.navbar-brand {
+  font-size: 25px !important;
+  font-weight: 600;
+}
+
+header .nav-link:hover {
+  color: gold;
+}
+
+.navbar {
+  padding: 4px;
+}
+
+@media (max-width: 1023px) {
+  header .container {
+    padding: 0px 15px;
+  }
+  .navbar-toggler img {
+    width: 40px !important;
+    margin-right: 25px;
+  }
+  header .logo {
+    height: 70px;
+    width: 80px;
+  }
+  .navbar {
+    padding: 0px !important;
+  }
+  .follows {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .navbar {
+    padding: 0px;
+  }
+  .navbar .container {
+    margin: 4px;
+  }
+  header .header-top .col-det .ulleft li {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  header .header-top .col-det .ulleft li small {
+    color: #8c8a8a;
+    font-size: 13px;
+  }
+
+  header .nav-link {
+    color: #686968 !important;
+    border: 1px solid #ccc;
+    padding: 2px 10px !important;
+    border-radius: 50px;
+    margin: 5px 70px;
+    font-weight: 500;
+    font-size: 12px;
+  }
+  header .header-top .btn-bhed {
+    padding: 2px;
+    text-align: right;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  header .header-top .btn-bhed .btn {
+    padding: 2px 15px;
+    margin-right: 15px;
+    border-radius: 50px;
+    margin-left: 1px;
+    font-size: 12px;
+  }
+  .logout {
+    display: flex;
+    justify-content: center;
+  }
+  .follows {
+    display: none !important;
+  }
+  .navbar-toggler img {
+    width: 25px !important;
+    margin-right: 10px;
+  }
+  header .logo {
+    height: 55px;
+    width: 60px;
+  }
+  .navbar-toggler {
+    padding-top: 8px !important;
+  }
+  .table td {
+    font-size: 12px;
+  }
+  .table th {
+    font-size: 14px;
+  }
+}
+
+.contract {
+  animation: scale-display 0.3s;
+  display: inline-flex;
+}
+
+.new-report {
+  bottom: 40%;
+}
+
+.page {
+  min-height: 90vh;
+}

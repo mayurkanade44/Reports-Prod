@@ -155,6 +155,7 @@ const reportSlice = createSlice({
       })
       .addCase(uploadImage.pending, (state) => {
         state.reportLoading = true;
+        toast.info("Image Uploading")
       })
       .addCase(uploadImage.fulfilled, (state, { payload }) => {
         state.reportLoading = false;

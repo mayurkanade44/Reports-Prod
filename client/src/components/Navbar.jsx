@@ -14,7 +14,7 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg">
         <div className="container">
           <div className="mobile-nav">
-            <Link to="/contract" className="navbar-brand">
+            <Link to="/newReport" className="navbar-brand">
               <img src={report} alt="report" />
               Reports
             </Link>
@@ -52,7 +52,7 @@ const Navbar = () => {
                   ))}
                 <li className="nav-item">
                   <Link
-                    to="/contract"
+                    to="/newReport"
                     className="nav-link text-center"
                     aria-current="page"
                     onClick={() => {

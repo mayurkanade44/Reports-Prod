@@ -38,53 +38,63 @@ const Table = ({
                 </td>
               </tr>
             ))
-          : data?.map((item) => (
-              <tr key={item._id}>
+          : data?.map((item, index) => (
+              <tr key={item._id || index}>
                 <td>{item.reportName}</td>
                 <td>{item.inspectionBy}</td>
-                <td>{item.inspectionDate}</td>
-                <td>
-                  <button className="btn btn-primary btn-sm me-3" type="button">
-                    <a
-                      href={item.link}
-                      style={{ textDecoration: "none", color: "whitesmoke" }}
-                    >
-                      Download
-                    </a>
-                  </button>
-                  <label className="me-3">
-                    <input
-                      type="file"
-                      onChange={(e) => handleFile(item._id, e.target.files[0])}
-                      style={{
-                        width: 0,
-                        height: 0,
-                        overflow: "hidden",
-                        opacity: 0,
-                      }}
-                    />
-                    <span className="btn btn-warning btn-sm">Upload File</span>
-                  </label>
-                  {item.approved && (
+                <td>{item.inspectionDate.split("T")[0]}</td>
+                {item.link && (
+                  <td>
                     <button
-                      className="btn btn-info btn-sm"
-                      onClick={(e) => handleButton(item._id, item.emailList)}
+                      className="btn btn-primary btn-sm me-3"
+                      type="button"
                     >
-                      Send Email
-                      {item.email && (
-                        <img
-                          src={check}
-                          alt="check"
-                          style={{
-                            width: 15,
-                            paddingBottom: 4,
-                            paddingLeft: 2,
-                          }}
-                        />
-                      )}
+                      <a
+                        href={item.link}
+                        style={{ textDecoration: "none", color: "whitesmoke" }}
+                      >
+                        Download
+                      </a>
                     </button>
-                  )}
-                </td>
+                    <label className="me-3">
+                      <input
+                        type="file"
+                        onChange={(e) =>
+                          handleFile(item._id, e.target.files[0])
+                        }
+                        style={{
+                          width: 0,
+                          height: 0,
+                          overflow: "hidden",
+                          opacity: 0,
+                        }}
+                      />
+                      <span className="btn btn-warning btn-sm">
+                        Upload File
+                      </span>
+                    </label>
+                    {item.approved && (
+                      <button
+                        className="btn btn-info btn-sm"
+                        onClick={(e) => handleButton(item._id, item.emailList)}
+                      >
+                        Send Email
+                        {item.email && (
+                          <img
+                            src={check}
+                            alt="check"
+                            style={{
+                              width: 15,
+                              paddingBottom: 4,
+                              paddingLeft: 2,
+                            }}
+                          />
+                        )}
+                      </button>
+                    )}
+                  </td>
+                )}
+                {item.email && <td>{item.email}</td>}
               </tr>
             ))}
       </tbody>

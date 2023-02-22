@@ -269,6 +269,7 @@ export const sendEmail = async (req, res) => {
       dynamic_template_data: {
         fileName: report.reportName,
         name: req.user.name,
+        subject: report.reportType,
       },
       template_id: "d-0e9f59c886f84dd7ba895e0a3390697e",
       attachments: attach,
@@ -277,6 +278,15 @@ export const sendEmail = async (req, res) => {
 
     report.email = true;
     await report.save();
+
+    const emailData = {
+      inspectionDate: new Date(),
+      reportName: report.reportName,
+      email: emailTo.toString(),
+      inspectionBy: report.inspectionBy,
+    };
+
+    await Admin.create({ emailData });
 
     res.status(200).json({ msg: "Email has been sent" });
   } catch (error) {

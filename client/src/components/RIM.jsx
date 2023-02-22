@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { InputRow, InputSelect, Loading } from ".";
-import { useDispatch, useSelector } from "react-redux";
-import { addPage, createReport, uploadImage } from "../redux/reportSlice";
+import { useDispatch } from "react-redux";
+import { InputRow, InputSelect } from ".";
 import { addAdminValues } from "../redux/adminSlice";
+import { addPage } from "../redux/reportSlice";
 
 const initialState = {
   pest: "",
@@ -13,65 +13,41 @@ const initialState = {
   suggestion: "",
 };
 
-const CreateReport = () => {
-  const {
-    reportLoading,
-    image1,
-    image2,
-    meetTo,
-    meetContact,
-    meetEmail,
-    shownTo,
-    shownContact,
-    shownEmail,
-    inspectionDate,
-    contract,
-    reportName,
-    details,
-    reportType,
-    templateType,
-  } = useSelector((store) => store.report);
-  const { adminLoading, findings, suggestions } = useSelector(
-    (store) => store.admin
-  );
-  const { user } = useSelector((store) => store.user);
-  const [lastPage, setLastPage] = useState(false);
-  const [formValue, setFormValue] = useState(initialState);
+const RIM = ({
+  handleSubmit,
+  reportType,
+  findings,
+  suggestions,
+  handleImage1,
+  handleImage2,
+  templateType,
+  image1,
+  image2,
+  reportLoading,
+  setLastPage,
+  lastPage,
+  reportName,
+  details,
+  user,
+}) => {
   const [other, setOther] = useState({ find: "", suggest: "" });
-  const { pest, floor, subFloor, location, finding, suggestion } = formValue;
-  const ref = useRef();
 
+  const ref = useRef();
+  const ref1 = useRef();
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValue({ ...formValue, [name]: value });
-  };
-
-  const handleImage1 = (e) => {
-    const image = e.target.files[0];
-
-    const form = new FormData();
-    form.set("imageCount", "image1");
-    form.append("image", image);
-
-    dispatch(uploadImage(form));
-  };
-
-  const handleImage2 = (e) => {
-    const image = e.target.files[0];
-
-    const form = new FormData();
-    form.set("imageCount", "image2");
-    form.append("image", image);
-
-    dispatch(uploadImage(form));
-  };
+  const [formValue, setFormValue] = useState(initialState);
+  const { pest, floor, subFloor, location, finding, suggestion } = formValue;
 
   const next = async () => {
     if (reportType === "RIM") formValue.pest = "Rodent";
     if (image1) formValue.image1 = image1;
-    if (image2) formValue.image2 = image2;
+    if (image2) {
+      formValue.image2 = image2;
+    } else {
+      formValue.image2 =
+        "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg";
+    }
     if (finding === "Other") {
       formValue.finding = other.find;
       dispatch(addAdminValues({ finding: other.find }));
@@ -80,38 +56,26 @@ const CreateReport = () => {
       formValue.suggestion = other.suggest;
       dispatch(addAdminValues({ suggestion: other.suggest }));
     }
+
+    if (ref) ref.current.value = "";
+    if (ref1.current) ref1.current.value = "";
+
     await dispatch(addPage({ formValue }));
     setFormValue(initialState);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(
-      createReport({
-        reportName,
-        templateType,
-        reportType,
-        meetTo,
-        meetContact,
-        meetEmail,
-        shownTo,
-        shownContact,
-        shownEmail,
-        inspectionDate,
-        details,
-        contract,
-      })
-    );
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValue({ ...formValue, [name]: value });
   };
 
   const handleLastPage = () => {
-    next();
+    if (image1) next();
     setTimeout(() => {
       setLastPage(true);
     }, 500);
   };
 
-  if (adminLoading) return <Loading />;
   return (
     <form onSubmit={handleSubmit}>
       <div className="container row my-3">
@@ -222,7 +186,7 @@ const CreateReport = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    ref={ref}
+                    ref={ref1}
                     onChange={handleImage2}
                   />
                 </>
@@ -233,7 +197,8 @@ const CreateReport = () => {
                 type="button"
                 className="btn btn-primary"
                 disabled={
-                  templateType === "Single Picture"
+                  templateType === "Single Picture" ||
+                  templateType === "Before-After Picture"
                     ? image1 === null
                       ? true
                       : false
@@ -251,17 +216,8 @@ const CreateReport = () => {
                 type="button"
                 className="btn btn-success"
                 onClick={handleLastPage}
-                disabled={
-                  templateType === "Single Picture"
-                    ? image1 === null
-                      ? true
-                      : false
-                    : image2 === null
-                    ? true
-                    : false
-                }
               >
-                Add Last Page
+                Finish
               </button>
             </div>
           </>
@@ -287,4 +243,4 @@ const CreateReport = () => {
     </form>
   );
 };
-export default CreateReport;
+export default RIM;

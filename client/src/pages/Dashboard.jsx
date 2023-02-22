@@ -8,7 +8,7 @@ import {
   SearchContainer,
   ReportStats,
 } from "../components";
-import { addAdminValues } from "../redux/adminSlice";
+import { addAdminValues, getAdminValues } from "../redux/adminSlice";
 import {
   allReports,
   changePage,
@@ -38,7 +38,7 @@ const Dashboard = () => {
     totalPages,
     page,
   } = useSelector((store) => store.report);
-  const { adminLoading } = useSelector((store) => store.admin);
+  const { adminLoading, emailData } = useSelector((store) => store.admin);
   const ref = useRef();
   const dispatch = useDispatch();
   const [show, setShow] = useState("All Reports");
@@ -51,6 +51,7 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(getAllUsers());
     dispatch(allReports());
+    dispatch(getAdminValues());
 
     // eslint-disable-next-line
   }, [page]);
@@ -71,6 +72,7 @@ const Dashboard = () => {
 
   const handleMailForm = (id, emails) => {
     dispatch(mailForm({ id, emails }));
+    setShow("Email Data");
   };
 
   const handleSendMail = (e) => {
@@ -128,6 +130,14 @@ const Dashboard = () => {
             className="btn btn-primary"
             onClick={(e) => setShow(e.target.textContent)}
           >
+            Email Data
+          </button>
+        </div>
+        <div className="col-2">
+          <button
+            className="btn btn-primary"
+            onClick={(e) => setShow(e.target.textContent)}
+          >
             Add Template
           </button>
         </div>
@@ -147,28 +157,39 @@ const Dashboard = () => {
             }
           />
         </div>
-        {mailId.length > 0 ? (
-          <div>
-            <h6>Emails - {emailList.toString()}</h6>
-            <div className="col-6 d-flex">
-              <InputRow
-                label="Extra Email:"
-                type="email"
-                value={form.template}
-                handleChange={(e) =>
-                  setForm({ ...form, template: e.target.value })
-                }
-              />
-              <button
-                className="btn btn-success btn-sm ms-3"
-                onClick={handleSendMail}
-              >
-                Send
-              </button>
-            </div>
-          </div>
-        ) : (
-          <ReportStats data={reportsStats} />
+        {show === "Email Data" && (
+          <>
+            {mailId.length > 0 && (
+              <div className="row">
+                <h6 className="col-12">To - {emailList.toString()}</h6>
+                <div className="col-6">
+                  <InputRow
+                    label="Add Email Id:"
+                    type="email"
+                    value={form.template}
+                    handleChange={(e) =>
+                      setForm({ ...form, template: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="col-1">
+                  <button
+                    className="btn btn-success mt-1"
+                    onClick={handleSendMail}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            )}
+            <Table
+              th1="Report Name"
+              th2="Report By"
+              th3="Send Date"
+              th4="Email Ids"
+              data={emailData}
+            />
+          </>
         )}
         {show === "All Users" && (
           <>
@@ -194,6 +215,7 @@ const Dashboard = () => {
         )}
         {show === "All Reports" && (
           <div className="col-12">
+            <ReportStats data={reportsStats} />
             <Table
               th1="Report Name"
               th2="Report By"

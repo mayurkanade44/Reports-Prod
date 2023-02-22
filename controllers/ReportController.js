@@ -44,6 +44,18 @@ export const createReport = async (req, res) => {
     if (meetEmail.length > 0) emailList.push(meetEmail);
     if (shownEmail.length > 0) emailList.push(shownEmail);
 
+    const newReport = await Report.create({
+      reportName,
+      reportType,
+      templateType,
+      meetTo,
+      shownTo,
+      inspectionBy: req.user.name,
+      inspectionDate,
+      details,
+      emailList,
+    });
+
     const adminValues = await Admin.find();
 
     let file = "",
@@ -111,18 +123,8 @@ export const createReport = async (req, res) => {
 
     fs.unlinkSync(`./files/${reportName}.docx`);
 
-    await Report.create({
-      reportName,
-      reportType,
-      templateType,
-      meetTo,
-      shownTo,
-      inspectionBy: req.user.name,
-      inspectionDate,
-      details,
-      link: result.secure_url,
-      emailList,
-    });
+    newReport.link = result.secure_url;
+    await newReport.save();
 
     res.status(201).json({ msg: "Report successfully generated." });
   } catch (error) {

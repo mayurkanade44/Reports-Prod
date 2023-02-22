@@ -270,6 +270,7 @@ export const sendEmail = async (req, res) => {
         fileName: report.reportName,
         name: req.user.name,
         subject: report.reportType,
+        inspectionBy: report.inspectionBy,
       },
       template_id: "d-0e9f59c886f84dd7ba895e0a3390697e",
       attachments: attach,

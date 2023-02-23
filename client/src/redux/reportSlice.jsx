@@ -42,6 +42,19 @@ export const createReport = createAsyncThunk(
   }
 );
 
+export const generateReport = createAsyncThunk(
+  "report/generate",
+  async (id, thunkAPI) => {
+    try {
+      const res = await authFetch.get(`/report/generate/${id}`);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
 export const uploadImage = createAsyncThunk(
   "report/imgUpload",
   async (form, thunkAPI) => {
@@ -152,10 +165,11 @@ const reportSlice = createSlice({
       .addCase(createReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         console.log(payload);
+        toast.error(payload);
       })
       .addCase(uploadImage.pending, (state) => {
         state.reportLoading = true;
-        toast.info("Image Uploading")
+        toast.info("Image Uploading");
       })
       .addCase(uploadImage.fulfilled, (state, { payload }) => {
         state.reportLoading = false;
@@ -165,6 +179,7 @@ const reportSlice = createSlice({
       .addCase(uploadImage.rejected, (state, { payload }) => {
         state.reportLoading = false;
         console.log(payload);
+        toast.error(payload);
       })
       .addCase(allReports.pending, (state) => {
         state.reportLoading = true;
@@ -178,6 +193,7 @@ const reportSlice = createSlice({
       .addCase(allReports.rejected, (state, { payload }) => {
         state.reportLoading = false;
         console.log(payload);
+        toast.error(payload);
       })
       .addCase(sendEmail.pending, (state) => {
         state.reportLoading = true;
@@ -189,6 +205,7 @@ const reportSlice = createSlice({
       .addCase(sendEmail.rejected, (state, { payload }) => {
         state.reportLoading = false;
         console.log(payload);
+        toast.error(payload);
       })
       .addCase(contractDetails.pending, (state) => {
         state.reportLoading = true;
@@ -210,6 +227,17 @@ const reportSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(editReport.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload);
+      })
+      .addCase(generateReport.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(generateReport.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.success(payload.msg);
+      })
+      .addCase(generateReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload);
       });

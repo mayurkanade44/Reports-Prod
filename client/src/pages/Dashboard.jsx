@@ -13,6 +13,7 @@ import {
   allReports,
   changePage,
   editReport,
+  generateReport,
   mailForm,
   reportHandleChange,
   sendEmail,
@@ -25,9 +26,8 @@ import {
 } from "../redux/userSlice";
 
 const Dashboard = () => {
-  const { userLoading, allUsers, name, email, password, role } = useSelector(
-    (store) => store.user
-  );
+  const { userLoading, allUsers, name, email, password, role, user } =
+    useSelector((store) => store.user);
   const {
     reports,
     reportLoading,
@@ -63,6 +63,10 @@ const Dashboard = () => {
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
     dispatch(register({ name, email, role, password }));
+  };
+
+  const handleGenerate = (id) => {
+    dispatch(generateReport(id));
   };
 
   const handleSearch = (e) => {
@@ -183,6 +187,7 @@ const Dashboard = () => {
               </div>
             )}
             <Table
+              user={user}
               th1="Report Name"
               th2="Report By"
               th3="Send Date"
@@ -217,6 +222,7 @@ const Dashboard = () => {
           <div className="col-12">
             <ReportStats data={reportsStats} />
             <Table
+              user={user}
               th1="Report Name"
               th2="Report By"
               th3="Inspection Date"
@@ -224,6 +230,7 @@ const Dashboard = () => {
               data={reports}
               handleButton={handleMailForm}
               handleFile={handleFile}
+              handleGenerate={handleGenerate}
             />
             <nav aria-label="Page navigation example">
               <ul className="pagination">

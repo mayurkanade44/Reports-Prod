@@ -37,24 +37,118 @@ export const createReport = async (req, res) => {
       req.body.inspectionBy = req.user.name;
       req.body.approved = true;
       await Report.create(req.body);
-      return res.status(201).json({ msg: "Report successfully generated." });
+      return res.status(201).json({ msg: "Report successfully uploaded." });
     }
 
     let emailList = contract.billToEmails.concat(contract.shipToEmails);
     if (meetEmail.length > 0) emailList.push(meetEmail);
     if (shownEmail.length > 0) emailList.push(shownEmail);
 
-    const newReport = await Report.create({
+    const meetDetails = {
+      name: meetTo,
+      contact: meetContact,
+      email: meetEmail,
+    };
+
+    const shownDetails = {
+      name: shownTo,
+      contact: shownContact,
+      email: shownEmail,
+    };
+
+    await Report.create({
       reportName,
       reportType,
       templateType,
-      meetTo,
-      shownTo,
+      meetDetails,
+      shownDetails,
       inspectionBy: req.user.name,
       inspectionDate,
+      contract,
       details,
       emailList,
     });
+
+    // let file = "",
+    //   width = 16;
+    // adminValues.forEach((x) => {
+    //   if (
+    //     x.template &&
+    //     x.template.templateType === templateType &&
+    //     x.template.reportType === reportType
+    //   ) {
+    //     file = x.template.file;
+    //   }
+    // });
+
+    // const resp = await axios.get(file, {
+    //   responseType: "arraybuffer",
+    // });
+    // const template = Buffer.from(resp.data);
+
+    // if (templateType !== "Single Picture") width = 8;
+
+    // const buffer = await newdoc.createReport({
+    //   cmdDelimiter: ["{", "}"],
+    //   template,
+
+    //   additionalJsContext: {
+    //     meetTo: meetTo,
+    //     meetContact: meetContact,
+    //     meetEmail: meetEmail,
+    //     shownTo: shownTo,
+    //     shownContact: shownContact,
+    //     shownEmail: shownEmail,
+    //     inspectionBy: req.user.name,
+    //     inspectionDate: inspectionDate,
+    //     contract: contract,
+    //     data: details,
+    //     image: async (url) => {
+    //       const resp = await axios.get(url, {
+    //         responseType: "arraybuffer",
+    //       });
+    //       const buffer = Buffer.from(resp.data, "binary").toString("base64");
+    //       return {
+    //         width: width,
+    //         height: 9,
+    //         data: buffer,
+    //         extension: ".jpg",
+    //       };
+    //     },
+    //   },
+    // });
+
+    // fs.writeFileSync(
+    //   path.resolve(__dirname, "../files/", `${reportName}.docx`),
+    //   buffer
+    // );
+
+    // const result = await cloudinary.uploader.upload(
+    //   `files/${reportName}.docx`,
+    //   {
+    //     resource_type: "raw",
+    //     use_filename: true,
+    //     folder: "reports",
+    //   }
+    // );
+
+    // fs.unlinkSync(`./files/${reportName}.docx`);
+
+    // newReport.link = result.secure_url;
+    // await newReport.save();
+
+    res.status(201).json({ msg: "Report successfully saved." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const generateReport = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const report = await Report.findOne({ _id: id });
+    if (!report) return res.stats(404).json({ msg: "Report Not Found" });
 
     const adminValues = await Admin.find();
 
@@ -63,8 +157,8 @@ export const createReport = async (req, res) => {
     adminValues.forEach((x) => {
       if (
         x.template &&
-        x.template.templateType === templateType &&
-        x.template.reportType === reportType
+        x.template.templateType === report.templateType &&
+        x.template.reportType === report.reportType
       ) {
         file = x.template.file;
       }
@@ -75,23 +169,23 @@ export const createReport = async (req, res) => {
     });
     const template = Buffer.from(resp.data);
 
-    if (templateType !== "Single Picture") width = 8;
+    if (report.templateType !== "Single Picture") width = 8;
 
     const buffer = await newdoc.createReport({
       cmdDelimiter: ["{", "}"],
       template,
 
       additionalJsContext: {
-        meetTo: meetTo,
-        meetContact: meetContact,
-        meetEmail: meetEmail,
-        shownTo: shownTo,
-        shownContact: shownContact,
-        shownEmail: shownEmail,
-        inspectionBy: req.user.name,
-        inspectionDate: inspectionDate,
-        contract: contract,
-        data: details,
+        meetTo: report.meetDetails.name,
+        meetContact: report.meetDetails.contact,
+        meetEmail: report.meetDetails.email,
+        shownTo: report.shownDetails.name,
+        shownContact: report.shownDetails.contact,
+        shownEmail: report.shownDetails.email,
+        inspectionBy: report.inspectionBy,
+        inspectionDate: report.inspectionDate,
+        contract: report.contract,
+        data: report.details,
         image: async (url) => {
           const resp = await axios.get(url, {
             responseType: "arraybuffer",
@@ -108,23 +202,23 @@ export const createReport = async (req, res) => {
     });
 
     fs.writeFileSync(
-      path.resolve(__dirname, "../files/", `${reportName}.docx`),
+      path.resolve(__dirname, "../files/", `${report.reportName}.docx`),
       buffer
     );
 
-    const result = await cloudinary.uploader.upload(
-      `files/${reportName}.docx`,
-      {
-        resource_type: "raw",
-        use_filename: true,
-        folder: "reports",
-      }
-    );
+    // const result = await cloudinary.uploader.upload(
+    //   `files/${report.reportName}.docx`,
+    //   {
+    //     resource_type: "raw",
+    //     use_filename: true,
+    //     folder: "reports",
+    //   }
+    // );
 
-    fs.unlinkSync(`./files/${reportName}.docx`);
+    // fs.unlinkSync(`./files/${report.reportName}.docx`);
 
-    newReport.link = result.secure_url;
-    await newReport.save();
+    // report.link = result.secure_url;
+    // await report.save();
 
     res.status(201).json({ msg: "Report successfully generated." });
   } catch (error) {

@@ -5,6 +5,7 @@ import {
   allReports,
   createReport,
   editReport,
+  generateReport,
   sendEmail,
   uploadImages,
 } from "../controllers/ReportController.js";
@@ -21,5 +22,6 @@ router
 router
   .route("/editReport/:id")
   .patch(authorizeUser("Admin", "Back Office"), editReport);
+router.route("/generate/:id").get(generateReport)
 
 export default router;

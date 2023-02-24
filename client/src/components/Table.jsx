@@ -100,14 +100,16 @@ const Table = ({
                         </button>
                       )}
                     </>
-                  ) : user.name === 'mayur' &&
-                    <button
-                      className="btn btn-success btn-sm"
-                      onClick={() => handleGenerate(item._id)}
-                    >
-                      Generate Report
-                    </button>
-                  }
+                  ) : (
+                    !item.email && (
+                      <button
+                        className="btn btn-success btn-sm"
+                        onClick={() => handleGenerate(item._id)}
+                      >
+                        Generate Report
+                      </button>
+                    )
+                  )}
                   {item.email && item.email}
                 </td>
               </tr>

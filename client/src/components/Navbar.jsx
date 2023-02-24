@@ -35,21 +35,20 @@ const Navbar = () => {
               id="navbarNav"
             >
               <ul className="navbar-nav ms-auto">
-                {user.role === "Back Office" ||
-                  (user.role === "Admin" && (
-                    <li className="nav-item">
-                      <Link
-                        to="/dashboard"
-                        className="nav-link text-center"
-                        aria-current="page"
-                        onClick={() => {
-                          setExpand(false);
-                        }}
-                      >
-                        Dashboard
-                      </Link>
-                    </li>
-                  ))}
+                {(user.role === "Back Office" || user.role === "Admin") && (
+                  <li className="nav-item">
+                    <Link
+                      to="/dashboard"
+                      className="nav-link text-center"
+                      aria-current="page"
+                      onClick={() => {
+                        setExpand(false);
+                      }}
+                    >
+                      Dashboard
+                    </Link>
+                  </li>
+                )}
                 <li className="nav-item">
                   <Link
                     to="/newReport"

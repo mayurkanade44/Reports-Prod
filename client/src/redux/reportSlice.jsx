@@ -47,6 +47,7 @@ export const generateReport = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const res = await authFetch.get(`/report/generate/${id}`);
+      thunkAPI.dispatch(allReports(""))
       return res.data;
     } catch (error) {
       console.log(error);
@@ -152,6 +153,7 @@ const reportSlice = createSlice({
     changePage: (state, { payload }) => {
       state.page = payload;
     },
+    clearReport: (state) => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -250,6 +252,7 @@ export const {
   directUpload,
   mailForm,
   changePage,
+  clearReport
 } = reportSlice.actions;
 
 export default reportSlice.reducer;

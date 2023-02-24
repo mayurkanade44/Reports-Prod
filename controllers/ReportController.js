@@ -206,19 +206,29 @@ export const generateReport = async (req, res) => {
       buffer
     );
 
-    // const result = await cloudinary.uploader.upload(
-    //   `files/${report.reportName}.docx`,
-    //   {
-    //     resource_type: "raw",
-    //     use_filename: true,
-    //     folder: "reports",
-    //   }
-    // );
+    const size = fs.statSync(
+      path.resolve(__dirname, "../files/", `${report.reportName}.docx`)
+    );
 
-    // fs.unlinkSync(`./files/${report.reportName}.docx`);
+    if (size.size < 10000000) {
+      const result = await cloudinary.uploader.upload(
+        `files/${report.reportName}.docx`,
+        {
+          resource_type: "raw",
+          use_filename: true,
+          folder: "reports",
+        }
+      );
+      report.link = result.secure_url;
+      await report.save();
 
-    // report.link = result.secure_url;
-    // await report.save();
+      fs.unlinkSync(`./files/${report.reportName}.docx`);
+    } else {
+      fs.unlinkSync(`./files/${report.reportName}.docx`);
+      return res
+        .status(200)
+        .json({ msg: "File size is too large contact Admin" });
+    }
 
     res.status(201).json({ msg: "Report successfully generated." });
   } catch (error) {
@@ -235,6 +245,7 @@ export const uploadImages = async (req, res) => {
         use_filename: true,
         folder: "reports",
         quality: 30,
+        width: 800,
       }
     );
     fs.unlinkSync(req.files.image.tempFilePath);

@@ -5,7 +5,7 @@ import { addAdminValues } from "../redux/adminSlice";
 import { addPage } from "../redux/reportSlice";
 
 const initialState = {
-  pest: "",
+  pest: "Rodent",
   floor: "",
   subFloor: "",
   location: "",
@@ -40,7 +40,6 @@ const RIM = ({
   const { pest, floor, subFloor, location, finding, suggestion } = formValue;
 
   const next = async () => {
-    if (reportType === "RIM") formValue.pest = "Rodent";
     if (image1) formValue.image1 = image1;
     if (image2) {
       formValue.image2 = image2;
@@ -123,15 +122,14 @@ const RIM = ({
               />
             </div>
             <div className="col-md-6">
-              {finding !== "Other" ? (
-                <InputSelect
-                  label="Findings:"
-                  name="finding"
-                  value={finding}
-                  data={["Select", ...findings, "Other"]}
-                  handleChange={handleChange}
-                />
-              ) : (
+              <InputSelect
+                label="Findings:"
+                name="finding"
+                value={finding}
+                data={["Select", ...findings, "Other"]}
+                handleChange={handleChange}
+              />
+              {finding === "Other" && (
                 <InputRow
                   label="Finding"
                   type="text"
@@ -144,15 +142,14 @@ const RIM = ({
               )}
             </div>
             <div className="col-md-6">
-              {suggestion !== "Other" ? (
-                <InputSelect
-                  label="Suggestions:"
-                  name="suggestion"
-                  value={suggestion}
-                  data={["Select", ...suggestions, "Other"]}
-                  handleChange={handleChange}
-                />
-              ) : (
+              <InputSelect
+                label="Suggestions:"
+                name="suggestion"
+                value={suggestion}
+                data={["Select", ...suggestions, "Other"]}
+                handleChange={handleChange}
+              />
+              {suggestion === "Other" && (
                 <InputRow
                   label="Suggestions"
                   type="text"

@@ -41,11 +41,13 @@ const RIM = ({
 
   const next = async () => {
     if (image1) formValue.image1 = image1;
-    if (image2) {
-      formValue.image2 = image2;
-    } else {
-      formValue.image2 =
-        "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg";
+    if (templateType !== "Single Picture") {
+      if (image2) {
+        formValue.image2 = image2;
+      } else {
+        formValue.image2 =
+          "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg";
+      }
     }
     if (finding === "Other") {
       formValue.finding = other.find;

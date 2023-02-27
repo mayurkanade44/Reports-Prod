@@ -44,14 +44,18 @@ export const createReport = async (req, res) => {
     if (meetEmail.length > 0) emailList.push(meetEmail);
     if (shownEmail.length > 0) emailList.push(shownEmail);
 
+    contract.number = capitalLetter(contract.number);
+    contract.billToName = capitalLetter(contract.billToName);
+    contract.shipToName = capitalLetter(contract.shipToName);
+
     const meetDetails = {
-      name: meetTo,
+      name: capitalLetter(meetTo),
       contact: meetContact,
       email: meetEmail,
     };
 
     const shownDetails = {
-      name: shownTo,
+      name: capitalLetter(shownTo),
       contact: shownContact,
       email: shownEmail,
     };
@@ -144,6 +148,14 @@ export const createReport = async (req, res) => {
   }
 };
 
+const capitalLetter = (phrase) => {
+  return phrase
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
 export const generateReport = async (req, res) => {
   const { id } = req.params;
   try {
@@ -186,7 +198,9 @@ export const generateReport = async (req, res) => {
         inspectionDate: report.inspectionDate,
         contract: report.contract,
         data: report.details,
-        image: async (url) => {
+        image: async (
+          url = "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg"
+        ) => {
           const resp = await axios.get(url, {
             responseType: "arraybuffer",
           });

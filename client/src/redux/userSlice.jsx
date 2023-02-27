@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authFetch } from "./auth";
 import { toast } from "react-toastify";
+import { clearReport } from "./reportSlice";
 
 const initialState = {
   userLoading: false,
@@ -56,6 +57,19 @@ export const userDelete = createAsyncThunk(
     } catch (error) {
       console.log(error);
       return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const clearStore = createAsyncThunk(
+  "user/clearStore",
+  async (_, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(logout());
+      thunkAPI.dispatch(clearReport());
+      return Promise.resolve();
+    } catch (error) {
+      return Promise.reject();
     }
   }
 );

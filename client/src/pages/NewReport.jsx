@@ -8,6 +8,7 @@ import {
   createReport,
   contractDetails,
   directUpload,
+  createContract,
 } from "../redux/reportSlice";
 
 const NewReport = () => {
@@ -31,6 +32,15 @@ const NewReport = () => {
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const [showReport, setShowReport] = useState(false);
+  const [newContract, setNewContract] = useState({
+    number: "",
+    billToName: "",
+    billToAddress: "",
+    billToEmails: [],
+    shipToName: "",
+    shipToAddress: "",
+    shipToEmails: [],
+  });
   const [file, setFile] = useState("");
   const navigate = useNavigate();
   const repoType = [];
@@ -62,12 +72,14 @@ const NewReport = () => {
   }, [contract]);
 
   const handleDirect = () => {
-     dispatch(directUpload());
+    dispatch(directUpload());
   };
 
   const startReport = () => {
     const name = "reportName";
-    const value = `${contract.number.replace(
+    const number =
+      contract.number[0].toUpperCase() + contract.number.slice(1);
+    const value = `${number.replace(
       /\//g,
       "-"
     )} ${reportType} ${templateType}`;
@@ -86,6 +98,11 @@ const NewReport = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     dispatch(reportHandleChange({ name, value }));
+  };
+
+  const handleContract = async () => {
+    dispatch(createContract(newContract));
+    setShowReport(true);
   };
 
   const handleSubmit = async (e) => {
@@ -125,7 +142,7 @@ const NewReport = () => {
               }
             />
           </div>
-          {contract && (
+          {contract ? (
             <>
               <div className="col-md-6">
                 <table className="table table-bordered">
@@ -181,6 +198,57 @@ const NewReport = () => {
                 )}
               </div>
             </>
+          ) : (
+            <div className="col-md-7 mt-5">
+              <h6 className="text-danger text-center">
+                If Client Has No Contract Please Provide Below Details.
+              </h6>
+              <div className="col-md-10">
+                <InputRow
+                  label="Client Name:"
+                  type="text"
+                  name="billToName"
+                  value={newContract.billToName}
+                  handleChange={(e) =>
+                    setNewContract({
+                      ...newContract,
+                      billToName: e.target.value,
+                      number: e.target.value,
+                      shipToName: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="col-md-10">
+                <h5 htmlFor="floatingTextarea d-inline">Client Address:</h5>
+                <textarea
+                  className="form-control"
+                  placeholder="Please provide full client address"
+                  name="billToAddress"
+                  value={newContract.billToAddress}
+                  onChange={(e) =>
+                    setNewContract({
+                      ...newContract,
+                      billToAddress: e.target.value,
+                      shipToAddress: e.target.value,
+                    })
+                  }
+                ></textarea>
+              </div>
+              <div className="col-md-3">
+                <button
+                  className="btn btn-success mt-2"
+                  disabled={
+                    !newContract.billToName || !newContract.billToAddress
+                      ? true
+                      : false
+                  }
+                  onClick={handleContract}
+                >
+                  Create New Report
+                </button>
+              </div>
+            </div>
           )}
         </div>
       ) : (

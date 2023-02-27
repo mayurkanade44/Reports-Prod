@@ -1,5 +1,5 @@
 import axios from "axios";
-import { toast } from "react-toastify";
+import { clearStore } from "./userSlice";
 
 export const authFetch = axios.create({ baseURL: "/api" });
 
@@ -11,14 +11,12 @@ authFetch.interceptors.request.use((config) => {
   return config;
 });
 
-authFetch.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response.status === 403) {
-      toast.error(error.response.data.msg);
-    }
-    return Promise.reject(error);
+
+export const unauthorizedResponse = (error, thunkAPI) => {
+  if (error.response.status === 401) {
+    thunkAPI.dispatch(clearStore());
+    return thunkAPI.rejectWithValue("Unauthorized! Logging Out...");
   }
-);
+  return thunkAPI.rejectWithValue(error.response.data.msg);
+};
+

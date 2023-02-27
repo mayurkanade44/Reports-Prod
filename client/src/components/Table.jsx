@@ -45,7 +45,7 @@ const Table = ({
                 <td>{item.inspectionBy}</td>
                 <td>{item.inspectionDate.split("T")[0]}</td>
                 <td>
-                  {item.link ? (
+                  {item.link && item.link.length > 0 ? (
                     <>
                       <button
                         className="btn btn-primary btn-sm me-3"

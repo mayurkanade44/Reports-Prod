@@ -77,12 +77,8 @@ const NewReport = () => {
 
   const startReport = () => {
     const name = "reportName";
-    const number =
-      contract.number[0].toUpperCase() + contract.number.slice(1);
-    const value = `${number.replace(
-      /\//g,
-      "-"
-    )} ${reportType} ${templateType}`;
+    const number = contract.number[0].toUpperCase() + contract.number.slice(1);
+    const value = `${number.replace(/\//g, "-")} ${reportType}`;
     dispatch(reportHandleChange({ name, value }));
     setTimeout(() => {
       setShowReport(true);

@@ -12,8 +12,9 @@ const ReportSchema = new mongoose.Schema(
     contract: { type: Object, required: true },
     details: [],
     link: { type: String },
+    quotation: { type: String },
     approved: { type: Boolean, default: false },
-    email: { type: Boolean, default: false },
+    email: { type: Boolean, default: false }, //for checking email sent
     emailList: [String],
   },
   { timestamps: true }

@@ -45,7 +45,7 @@ const Table = ({
                 <td>{item.inspectionBy}</td>
                 <td>{item.inspectionDate.split("T")[0]}</td>
                 <td>
-                  {item.link && item.link.length > 0 ? (
+                  {item.link ? (
                     <>
                       <button
                         className="btn btn-primary btn-sm me-3"
@@ -64,18 +64,33 @@ const Table = ({
                       <label className="me-3">
                         <input
                           type="file"
+                          className="upload"
                           onChange={(e) =>
-                            handleFile(item._id, e.target.files[0])
+                            handleFile(
+                              item._id,
+                              e.target.files[0],
+                              "Upload Report"
+                            )
                           }
-                          style={{
-                            width: 0,
-                            height: 0,
-                            overflow: "hidden",
-                            opacity: 0,
-                          }}
                         />
                         <span className="btn btn-warning btn-sm">
-                          Upload File
+                          Upload Report
+                        </span>
+                      </label>
+                      <label className="me-3">
+                        <input
+                          type="file"
+                          className="upload"
+                          onChange={(e) =>
+                            handleFile(
+                              item._id,
+                              e.target.files[0],
+                              "Upload Quotation"
+                            )
+                          }
+                        />
+                        <span className="btn btn-secondary btn-sm">
+                          Upload Quotation
                         </span>
                       </label>
                       {item.approved && (
@@ -101,16 +116,13 @@ const Table = ({
                       )}
                     </>
                   ) : (
-                    !item.email && (
-                      <button
-                        className="btn btn-success btn-sm"
-                        onClick={() => handleGenerate(item._id)}
-                      >
-                        Generate Report
-                      </button>
-                    )
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={() => handleGenerate(item._id)}
+                    >
+                      Generate Report
+                    </button>
                   )}
-                  {item.email && item.email}
                 </td>
               </tr>
             ))}

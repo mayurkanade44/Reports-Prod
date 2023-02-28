@@ -235,3 +235,18 @@ header .nav-link:hover {
 .page {
   min-height: 90vh;
 }
+
+.email {
+  font-size: 12px !important;
+}
+
+.emails td {
+  font-size: 14px;
+}
+
+.upload {
+  width: 0px;
+  height: 0px;
+  overflow: "hidden";
+  opacity: 0;
+}

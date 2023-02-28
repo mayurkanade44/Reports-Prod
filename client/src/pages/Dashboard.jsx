@@ -7,6 +7,7 @@ import {
   Loading,
   SearchContainer,
   ReportStats,
+  EmailTable,
 } from "../components";
 import { addAdminValues, getAdminValues } from "../redux/adminSlice";
 import {
@@ -99,10 +100,12 @@ const Dashboard = () => {
     setForm({ template: "", report: "", doc: "" });
   };
 
-  const handleFile = (id, file) => {
+  const handleFile = (id, file, name) => {
     const form = new FormData();
 
-    form.append("file", file);
+    if (name === "Upload Report") form.append("file", file);
+    else if (name === "Upload Quotation") form.append("quotation", file);
+
     dispatch(editReport({ id, form }));
   };
 
@@ -186,12 +189,8 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-            <Table
+            <EmailTable
               user={user}
-              th1="Report Name"
-              th2="Report By"
-              th3="Send Date"
-              th4="Email Ids"
               data={emailData}
             />
           </>

@@ -282,8 +282,13 @@ export const editReport = async (req, res) => {
     if (!report) return res.status(404).json({ msg: "Report not found" });
 
     if (req.files.file) {
-      const link = await uploadFile(req.files.file);
-      report.link = link;
+      report.link = await uploadFile(req.files.file);
+      report.approved = true;
+      await report.save();
+    }
+
+    if (req.files.quotation) {
+      report.quotation = await uploadFile(req.files.quotation);
       report.approved = true;
       await report.save();
     }
@@ -360,36 +365,68 @@ export const sendEmail = async (req, res) => {
   const { emailList, emails, mailId } = req.body;
   try {
     const report = await Report.findById(mailId);
+    let reportQuot = `${report.reportType} Report`;
+
+    const files = [{ name: `${report.reportName} Report`, link: report.link }];
+    if (report.quotation) {
+      reportQuot += " And Quotation";
+      files.push({
+        name: `${report.reportName} Quotation`,
+        link: report.quotation,
+      });
+    }
 
     const attach = [];
-    const fileType = report.link.split(".").pop();
-    const result = await axios.get(report.link, {
-      responseType: "arraybuffer",
-    });
-    const base64File = Buffer.from(result.data, "binary").toString("base64");
-    const attachObj = {
-      content: base64File,
-      filename: `${report.reportName}.${fileType}`,
-      type: `application/${fileType}`,
-      disposition: "attachment",
-    };
-    attach.push(attachObj);
 
-    const emailTo = [];
+    for (let i = 0; i < files.length; i++) {
+      const fileType = files[i].link.split(".").pop();
+      const result = await axios.get(files[i].link, {
+        responseType: "arraybuffer",
+      });
+      const base64File = Buffer.from(result.data, "binary").toString("base64");
+
+      const attachObj = {
+        content: base64File,
+        filename: `${files[i].name}.${fileType}`,
+        type: `application/${fileType}`,
+        disposition: "attachment",
+      };
+      attach.push(attachObj);
+    }
+
+    // const fileType = report.link.split(".").pop();
+    // const result = await axios.get(report.link, {
+    //   responseType: "arraybuffer",
+    // });
+    // const base64File = Buffer.from(result.data, "binary").toString("base64");
+
+    // const attachObj = {
+    //   content: base64File,
+    //   filename: `${report.reportName}.${fileType}`,
+    //   type: `application/${fileType}`,
+    //   disposition: "attachment",
+    // };
+    // attach.push(attachObj);
+
+    let emailTo = [];
     for (let email of emailList) {
       if (email !== "clientproxymail@gmail.com" && !emailTo.includes(email))
         emailTo.push(email);
     }
 
-    if (emails.length > 0) emailTo.push(emails);
+    if (emails.length > 0) {
+      emailTo = emailTo.concat(emails.split(","));
+    }
 
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     const msg = {
       to: emailTo,
-      from: { email: "noreply.epcorn@gmail.com", name: "donotreply_epcorn" },
+      cc: ["sales@epcorn.com", "natco.epcorn@gmail.com"],
+      from: { email: "noreply.epcorn@gmail.com", name: "Epcorn" },
       dynamic_template_data: {
         fileName: report.reportName,
         name: req.user.name,
+        report: reportQuot,
         subject: report.reportType,
         inspectionBy: report.inspectionBy,
       },
@@ -402,10 +439,12 @@ export const sendEmail = async (req, res) => {
     await report.save();
 
     const emailData = {
-      inspectionDate: new Date(),
+      sendDate: new Date(),
       reportName: report.reportName,
-      email: emailTo.toString(),
-      inspectionBy: report.inspectionBy,
+      emails: emailTo.toString(),
+      sendBy: req.user.name,
+      report: report.link,
+      quotation: report.quotation,
     };
 
     await Admin.create({ emailData });
@@ -413,6 +452,7 @@ export const sendEmail = async (req, res) => {
     res.status(200).json({ msg: "Email has been sent" });
   } catch (error) {
     console.log(error);
+    console.log(error.response.body);
     return res.status(500).json({ msg: "Server error, try again later" });
   }
 };

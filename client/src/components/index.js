@@ -1,3 +1,4 @@
+import EmailTable from "./EmailTable";
 import InputRow from "./InputRow";
 import InputSelect from "./InputSelect";
 import Loading from "./Loading";
@@ -18,4 +19,5 @@ export {
   ReportStats,
   Navbar,
   RIM,
+  EmailTable,
 };

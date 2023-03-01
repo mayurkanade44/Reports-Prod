@@ -40,15 +40,11 @@ const RIM = ({
   const { pest, floor, subFloor, location, finding, suggestion } = formValue;
 
   const next = async () => {
-    if (image1) formValue.image1 = image1;
-    if (templateType !== "Single Picture") {
-      if (image2) {
-        formValue.image2 = image2;
-      } else {
-        formValue.image2 =
-          "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg";
-      }
-    }
+    if (!image1) return;
+    else formValue.image1 = image1;
+    if (templateType !== "Single Picture" && !image2) return;
+    else formValue.image2 = image2;
+
     if (finding === "Other") {
       formValue.finding = other.find;
       dispatch(addAdminValues({ finding: other.find }));
@@ -58,10 +54,10 @@ const RIM = ({
       dispatch(addAdminValues({ suggestion: other.suggest }));
     }
 
+    await dispatch(addPage({ formValue }));
+
     if (ref) ref.current.value = "";
     if (ref1.current) ref1.current.value = "";
-
-    await dispatch(addPage({ formValue }));
     setFormValue(initialState);
   };
 
@@ -196,8 +192,7 @@ const RIM = ({
                 type="button"
                 className="btn btn-primary"
                 disabled={
-                  templateType === "Single Picture" ||
-                  templateType === "Before-After Picture"
+                  templateType === "Single Picture"
                     ? image1 === null
                       ? true
                       : false

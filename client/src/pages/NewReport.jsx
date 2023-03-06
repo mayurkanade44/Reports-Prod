@@ -106,7 +106,9 @@ const NewReport = () => {
     form.set("shownTo", shownTo);
     form.set(
       "contract",
-      contract ? contract.billToEmails.concat(contract.shipToEmails) : "Direct"
+      contract
+        ? contract.billToEmails.concat(contract.shipToEmails)
+        : "clientproxymail@gmail.com"
     );
     form.set("inspectionDate", inspectionDate);
     form.append("file", file);
@@ -185,6 +187,77 @@ const NewReport = () => {
                   Create New Report
                 </button>
               </div>
+              {(user.role === "Admin" || user.role === "Back Office") && (
+                <div className="col-md-6 mt-5">
+                  <h5 className="text-danger text-center">
+                    If You Want To Upload Direct Report.
+                  </h5>
+                  <form
+                    onSubmit={handleSubmit}
+                    className="d-flex flex-column justify-content-center align-items-center"
+                  >
+                    <div className="col-md-10">
+                      <InputRow
+                        label="Report Name:"
+                        type="text"
+                        name="reportName"
+                        value={reportName}
+                        handleChange={handleChange}
+                      />
+                    </div>
+                    <div className="col-md-10">
+                      <InputRow
+                        label="Report Type:"
+                        type="text"
+                        name="meetTo"
+                        value={meetTo}
+                        handleChange={handleChange}
+                      />
+                    </div>
+                    <div className="col-md-10">
+                      <InputRow
+                        label="Inspection By:"
+                        type="text"
+                        name="shownTo"
+                        value={shownTo}
+                        handleChange={handleChange}
+                      />
+                    </div>
+                    <div className="col-md-10">
+                      <InputRow
+                        label="Inspection Date:"
+                        type="date"
+                        name="inspectionDate"
+                        value={inspectionDate}
+                        handleChange={handleChange}
+                      />
+                    </div>
+                    <div className="col-md-10 my-3">
+                      <input
+                        type="file"
+                        onChange={(e) => setFile(e.target.files[0])}
+                      />
+                    </div>
+                    <div className="col-md-4 text-center">
+                      <button
+                        className="btn btn-primary"
+                        type="submit"
+                        disabled={
+                          !reportName ||
+                          !file ||
+                          !inspectionDate ||
+                          !shownTo ||
+                          !meetTo
+                            ? true
+                            : false
+                        }
+                      >
+                        {reportLoading ? "Uploading" : "Submit Report"}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
             </>
           ) : (
             <>
@@ -241,7 +314,7 @@ const NewReport = () => {
               {(user.role === "Admin" || user.role === "Back Office") && (
                 <div className="col-md-6 mt-5">
                   <h5 className="text-danger text-center">
-                    If You Want Upload Direct Report.
+                    If You Want To Upload Direct Report.
                   </h5>
                   <form
                     onSubmit={handleSubmit}
@@ -293,7 +366,15 @@ const NewReport = () => {
                       <button
                         className="btn btn-primary"
                         type="submit"
-                        disabled={reportLoading ? true : false}
+                        disabled={
+                          !reportName ||
+                          !file ||
+                          !inspectionDate ||
+                          !shownTo ||
+                          !meetTo
+                            ? true
+                            : false
+                        }
                       >
                         {reportLoading ? "Uploading" : "Submit Report"}
                       </button>

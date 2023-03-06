@@ -22,7 +22,6 @@ const initialState = {
   reports: [],
   search: "",
   reportsStats: [],
-  directReport: false,
   mailId: "",
   emailList: [],
   totalPages: 1,
@@ -139,13 +138,7 @@ const reportSlice = createSlice({
     reportHandleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
     },
-    directUpload: (state) => {
-      state.directReport = true;
-      state.templateType = "Direct";
-      state.reportType = "Direct";
-      state.meetTo = "Direct";
-      state.shownTo = "Direct";
-    },
+
     mailForm: (state, { payload: { id, emails } }) => {
       state.mailId = id;
       state.emailList = emails;
@@ -252,11 +245,10 @@ const reportSlice = createSlice({
 export const {
   addPage,
   reportHandleChange,
-  directUpload,
   mailForm,
   changePage,
   clearReport,
-  createContract
+  createContract,
 } = reportSlice.actions;
 
 export default reportSlice.reducer;

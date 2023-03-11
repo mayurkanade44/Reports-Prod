@@ -32,6 +32,7 @@ export const createReport = async (req, res) => {
 
     if (templateType === "Direct" && req.files.file) {
       const link = await uploadFile(req.files.file);
+      // if (req.files.quot) req.body.quotation = await uploadFile(req.files.quot);
       req.body.emailList = contract.split(",");
       req.body.contract = { name: "Direct" };
       req.body.link = link;
@@ -421,11 +422,13 @@ export const sendEmail = async (req, res) => {
       emailTo = emailTo.concat(emails.split(","));
     }
 
+   
+
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     const msg = {
       to: emailTo,
       cc: ["sales@epcorn.com", "natco.epcorn@gmail.com"],
-      from: { email: "noreply.epcorn@gmail.com", name: "Epcorn" },
+      from: { email: "noreply.epcorn@gmail.com", name: "Epcorn Reports" },
       dynamic_template_data: {
         fileName: report.reportName,
         name: req.user.name,

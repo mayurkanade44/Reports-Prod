@@ -55,7 +55,7 @@ const Dashboard = () => {
     dispatch(getAdminValues());
 
     // eslint-disable-next-line
-  }, [page]);
+  }, [page, show]);
 
   const handleDelete = (id) => {
     dispatch(userDelete(id));
@@ -189,10 +189,7 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-            <EmailTable
-              user={user}
-              data={emailData}
-            />
+            <EmailTable user={user} data={emailData} />
           </>
         )}
         {show === "All Users" && (

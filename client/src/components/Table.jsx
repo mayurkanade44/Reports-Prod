@@ -10,13 +10,16 @@ const Table = ({
   handleButton,
   handleFile,
   handleGenerate,
+  handleDownload,
 }) => {
   return (
     <table className="table table-striped-columns table-bordered mt-2">
       <thead>
         <tr>
-          <th style={{ width: 240 }}>{th1}</th>
-          <th>{th2}</th>
+          <th style={{ width: 350 }} className="text-center">
+            {th1}
+          </th>
+          <th className="text-center">{th2}</th>
           <th>{th3}</th>
           {th4 && <th className="text-center">{th4}</th>}
         </tr>
@@ -43,23 +46,23 @@ const Table = ({
               <tr key={item._id || index}>
                 <td>{item.reportName}</td>
                 <td>{item.inspectionBy}</td>
-                <td>{item.inspectionDate.split("T")[0]}</td>
+                <td className="text-center">
+                  {item.inspectionDate.split("T")[0]}
+                </td>
                 <td>
                   {item.link ? (
                     <>
                       <button
                         className="btn btn-primary btn-sm me-3"
                         type="button"
+                        onClick={() =>
+                          handleDownload({
+                            link: item.link,
+                            quotation: item.quotation,
+                          })
+                        }
                       >
-                        <a
-                          href={item.link}
-                          style={{
-                            textDecoration: "none",
-                            color: "whitesmoke",
-                          }}
-                        >
-                          Download
-                        </a>
+                        Download
                       </button>
                       <label className="me-3">
                         <input

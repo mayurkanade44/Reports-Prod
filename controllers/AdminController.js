@@ -8,13 +8,10 @@ import path from "path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const addValues = async (req, res) => {
-  const { finding, suggestion } = req.body;
+  const { finding, suggestion, services, comment } = req.body;
   try {
-    if (finding) {
-      await Admin.create({ finding });
-      return res.status(201).json();
-    } else if (suggestion) {
-      await Admin.create({ suggestion });
+    if (finding || suggestion || services || comment) {
+      await Admin.create(req.body);
       return res.status(201).json();
     } else if (req.files.file) {
       const docFile = req.files.file;
@@ -46,7 +43,9 @@ export const getValues = async (req, res) => {
     let findings = [],
       suggestions = [],
       templates = [],
-      emailData = [];
+      emailData = [],
+      services = [],
+      comments = [];
     for (let value of values) {
       if (value.finding && value.finding !== null) findings.push(value.finding);
       if (value.suggestion && value.suggestion !== null)
@@ -55,9 +54,14 @@ export const getValues = async (req, res) => {
         templates.push(value.template);
       if (value.emailData && value.emailData !== null)
         emailData.push(value.emailData);
+      if (value.services && value.services !== null)
+        services.push(value.services);
+      if (value.comment && value.comment !== null) comments.push(value.comment);
     }
 
-    res.status(201).json({ findings, suggestions, templates, emailData });
+    res
+      .status(201)
+      .json({ findings, suggestions, templates, emailData, services, comments });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

@@ -77,74 +77,6 @@ export const createReport = async (req, res) => {
       emailList,
     });
 
-    // let file = "",
-    //   width = 16;
-    // adminValues.forEach((x) => {
-    //   if (
-    //     x.template &&
-    //     x.template.templateType === templateType &&
-    //     x.template.reportType === reportType
-    //   ) {
-    //     file = x.template.file;
-    //   }
-    // });
-
-    // const resp = await axios.get(file, {
-    //   responseType: "arraybuffer",
-    // });
-    // const template = Buffer.from(resp.data);
-
-    // if (templateType !== "Single Picture") width = 8;
-
-    // const buffer = await newdoc.createReport({
-    //   cmdDelimiter: ["{", "}"],
-    //   template,
-
-    //   additionalJsContext: {
-    //     meetTo: meetTo,
-    //     meetContact: meetContact,
-    //     meetEmail: meetEmail,
-    //     shownTo: shownTo,
-    //     shownContact: shownContact,
-    //     shownEmail: shownEmail,
-    //     inspectionBy: req.user.name,
-    //     inspectionDate: inspectionDate,
-    //     contract: contract,
-    //     data: details,
-    //     image: async (url) => {
-    //       const resp = await axios.get(url, {
-    //         responseType: "arraybuffer",
-    //       });
-    //       const buffer = Buffer.from(resp.data, "binary").toString("base64");
-    //       return {
-    //         width: width,
-    //         height: 9,
-    //         data: buffer,
-    //         extension: ".jpg",
-    //       };
-    //     },
-    //   },
-    // });
-
-    // fs.writeFileSync(
-    //   path.resolve(__dirname, "../files/", `${reportName}.docx`),
-    //   buffer
-    // );
-
-    // const result = await cloudinary.uploader.upload(
-    //   `files/${reportName}.docx`,
-    //   {
-    //     resource_type: "raw",
-    //     use_filename: true,
-    //     folder: "reports",
-    //   }
-    // );
-
-    // fs.unlinkSync(`./files/${reportName}.docx`);
-
-    // newReport.link = result.secure_url;
-    // await newReport.save();
-
     res.status(201).json({ msg: "Report successfully saved." });
   } catch (error) {
     console.log(error);
@@ -169,7 +101,7 @@ export const generateReport = async (req, res) => {
     const adminValues = await Admin.find();
 
     let file = "",
-      width = 16;
+      width = 18;
     adminValues.forEach((x) => {
       if (
         x.template &&
@@ -185,7 +117,7 @@ export const generateReport = async (req, res) => {
     });
     const template = Buffer.from(resp.data);
 
-    if (report.templateType !== "Single Picture") width = 8;
+    if (report.templateType !== "Single Picture") width = 9;
 
     const buffer = await newdoc.createReport({
       cmdDelimiter: ["{", "}"],
@@ -211,7 +143,7 @@ export const generateReport = async (req, res) => {
           const buffer = Buffer.from(resp.data, "binary").toString("base64");
           return {
             width: width,
-            height: 9,
+            height: 13,
             data: buffer,
             extension: ".jpg",
           };
@@ -341,7 +273,7 @@ export const allReports = async (req, res) => {
     let repo = Report.find(searchObject)
       .sort("-createdAt")
       .select(
-        "reportName reportType inspectionBy inspectionDate link approved email emailList"
+        "reportName reportType inspectionBy inspectionDate link approved email emailList quotation"
       );
     // if (req.user.role === "Field") {
     //   reports = reports.filter((item) => item.inspectionBy === req.user.name);
@@ -421,8 +353,6 @@ export const sendEmail = async (req, res) => {
     if (emails.length > 0) {
       emailTo = emailTo.concat(emails.split(","));
     }
-
-   
 
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     const msg = {

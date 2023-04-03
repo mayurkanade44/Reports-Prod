@@ -5,12 +5,13 @@ import { addAdminValues } from "../redux/adminSlice";
 import { addPage } from "../redux/reportSlice";
 
 const initialState = {
-  pest: "Rodent",
+  pest: "",
   floor: "",
   subFloor: "",
   location: "",
   finding: "",
   suggestion: "",
+  comment: "",
 };
 
 const RIM = ({
@@ -18,6 +19,8 @@ const RIM = ({
   reportType,
   findings,
   suggestions,
+  comments,
+  services,
   handleImage1,
   handleImage2,
   templateType,
@@ -30,14 +33,15 @@ const RIM = ({
   details,
   user,
 }) => {
-  const [other, setOther] = useState({ find: "", suggest: "" });
+  const [other, setOther] = useState({ find: "", suggest: "", comment: "" });
 
   const ref = useRef();
   const ref1 = useRef();
   const dispatch = useDispatch();
 
   const [formValue, setFormValue] = useState(initialState);
-  const { pest, floor, subFloor, location, finding, suggestion } = formValue;
+  const { pest, floor, subFloor, location, finding, suggestion, comment } =
+    formValue;
 
   const next = async () => {
     if (!image1) return;
@@ -53,6 +57,11 @@ const RIM = ({
       formValue.suggestion = other.suggest;
       dispatch(addAdminValues({ suggestion: other.suggest }));
     }
+    if (comment === "Other") {
+      formValue.comment = other.comment;
+      dispatch(addAdminValues({ comment: other.comment }));
+    }
+    if (reportType === "RIM") formValue.pest = "Rodent";
 
     await dispatch(addPage({ formValue }));
 
@@ -77,11 +86,11 @@ const RIM = ({
     <form onSubmit={handleSubmit}>
       <div className="container row my-3">
         <h5 className="text-center">
-          {!lastPage ? "New Report" : "Report Summary"}
+          {!lastPage ? `${reportType} Report` : "Report Summary"}
         </h5>
         {!lastPage ? (
           <>
-            {reportType !== "RIM" && (
+            {reportType === "Pest Audit" && (
               <div className="col-md-6">
                 <InputRow
                   label="Pest:"
@@ -119,49 +128,88 @@ const RIM = ({
                 handleChange={handleChange}
               />
             </div>
-            <div className="col-md-6">
-              <InputSelect
-                label="Findings:"
-                name="finding"
-                value={finding}
-                data={["Select", ...findings, "Other"]}
-                handleChange={handleChange}
-              />
-              {finding === "Other" && (
-                <InputRow
-                  label="Finding"
-                  type="text"
-                  name="otherFinding"
-                  value={other.find}
-                  handleChange={(e) =>
-                    setOther({ ...other, find: e.target.value })
-                  }
-                />
-              )}
-            </div>
-            <div className="col-md-6">
-              <InputSelect
-                label="Suggestions:"
-                name="suggestion"
-                value={suggestion}
-                data={["Select", ...suggestions, "Other"]}
-                handleChange={handleChange}
-              />
-              {suggestion === "Other" && (
-                <InputRow
-                  label="Suggestions"
-                  type="text"
-                  name="otherFinding"
-                  value={other.suggest}
-                  handleChange={(e) =>
-                    setOther({ ...other, suggest: e.target.value })
-                  }
-                />
-              )}
-            </div>
+            {(reportType === "RIM" || reportType === "Pest Audit") && (
+              <>
+                <div className="col-md-6">
+                  <InputSelect
+                    label="Findings:"
+                    name="finding"
+                    value={finding}
+                    data={["Select", ...findings, "Other"]}
+                    handleChange={handleChange}
+                  />
+                  {finding === "Other" && (
+                    <InputRow
+                      label="Finding"
+                      type="text"
+                      name="otherFinding"
+                      value={other.find}
+                      handleChange={(e) =>
+                        setOther({ ...other, find: e.target.value })
+                      }
+                    />
+                  )}
+                </div>
+                <div className="col-md-6">
+                  <InputSelect
+                    label="Suggestions:"
+                    name="suggestion"
+                    value={suggestion}
+                    data={["Select", ...suggestions, "Other"]}
+                    handleChange={handleChange}
+                  />
+                  {suggestion === "Other" && (
+                    <InputRow
+                      label="Suggestions"
+                      type="text"
+                      name="otherFinding"
+                      value={other.suggest}
+                      handleChange={(e) =>
+                        setOther({ ...other, suggest: e.target.value })
+                      }
+                    />
+                  )}
+                </div>
+              </>
+            )}
+            {reportType === "Work Done" && (
+              <>
+                <div className="col-md-6">
+                  <InputSelect
+                    label="Treatment:"
+                    name="finding"
+                    value={finding}
+                    data={["Select", ...services]}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <InputSelect
+                    label="Comments:"
+                    name="comment"
+                    value={comment}
+                    data={["Select", ...comments, "Other"]}
+                    handleChange={handleChange}
+                  />
+                  {comment === "Other" && (
+                    <InputRow
+                      label="Comments"
+                      type="text"
+                      name="otherComment"
+                      value={other.comment}
+                      handleChange={(e) =>
+                        setOther({ ...other, comment: e.target.value })
+                      }
+                    />
+                  )}
+                </div>
+              </>
+            )}
             <div className="col-md-6 mt-3 mb-2 d-flex">
-              <h4 className="img me-1">
-                {templateType === "Before-After Picture" ? "Before" : "Image1"}
+              <h4 className="img me-2">
+                {templateType === "Before-After Picture"
+                  ? "Before:"
+                  : "Image1:"}
               </h4>
               <input
                 type="file"
@@ -173,10 +221,10 @@ const RIM = ({
             <div className="col-md-6 my-2 d-flex">
               {templateType !== "Single Picture" && (
                 <>
-                  <h4 className="img me-1">
+                  <h4 className="img me-2">
                     {templateType === "Before-After Picture"
-                      ? "After"
-                      : "Image2"}
+                      ? "After:"
+                      : "Image2:"}
                   </h4>
                   <input
                     type="file"
@@ -228,7 +276,7 @@ const RIM = ({
                 type="submit"
                 disabled={reportLoading || details.length === 0 ? true : false}
               >
-                {reportLoading ? "Generating Report..." : "Generate Report"}
+                {reportLoading ? "Submitting..." : "Submit Report"}
               </button>
             </div>
           </>

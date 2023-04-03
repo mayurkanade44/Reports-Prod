@@ -162,7 +162,6 @@ const reportSlice = createSlice({
       })
       .addCase(createReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
-        console.log(payload);
         toast.error(payload);
       })
       .addCase(uploadImage.pending, (state) => {
@@ -183,10 +182,10 @@ const reportSlice = createSlice({
         state.reportLoading = true;
       })
       .addCase(allReports.fulfilled, (state, { payload }) => {
-        state.reportLoading = false;
         state.reports = payload.reports;
         state.reportsStats = payload.stats;
         state.totalPages = payload.totalPages;
+        state.reportLoading = false;
       })
       .addCase(allReports.rejected, (state, { payload }) => {
         state.reportLoading = false;
@@ -202,7 +201,6 @@ const reportSlice = createSlice({
       })
       .addCase(sendEmail.rejected, (state, { payload }) => {
         state.reportLoading = false;
-        console.log(payload);
         toast.error(payload);
       })
       .addCase(contractDetails.pending, (state) => {

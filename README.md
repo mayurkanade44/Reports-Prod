@@ -1,4 +1,4 @@
-# CBDP
+# Report
 
 Report Portal is developed using MERN for quicker and easier creation of different types of Pest reports. Portal is designed to make pest control management more efficient and effective for businesses and their clients. The reports are created using a user-friendly interface with predefined report template that allows Operator/Supervisor to input information such as the type of pest problem, the severity of the infestation, location with image and the recommended treatment plan.
 
@@ -34,7 +34,7 @@ Documentation: [PDF]()
 ## Screenshots
 
 Admin/Back Office Page
-![App Screenshot](https://res.cloudinary.com/epcorn/image/upload/v1680080650/signature/report1_wlye5o.png)
+![App Screenshot](https://res.cloudinary.com/epcorn/image/upload/v1683529140/signature/report_port_bcdtn5.png)
 
 Admin/Back Office Page
 ![App Screenshot](https://res.cloudinary.com/epcorn/image/upload/v1680080650/signature/report2_v3eigv.png)

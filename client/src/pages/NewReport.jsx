@@ -112,7 +112,6 @@ const NewReport = () => {
     );
     form.set("inspectionDate", inspectionDate);
     form.append("file", file);
-    // form.append("quot", quotation);
 
     dispatch(createReport(form));
   };

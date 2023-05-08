@@ -66,6 +66,7 @@ export const clearStore = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       thunkAPI.dispatch(logout());
+      thunkAPI.dispatch(clearValues());
       thunkAPI.dispatch(clearReport());
       return Promise.resolve();
     } catch (error) {

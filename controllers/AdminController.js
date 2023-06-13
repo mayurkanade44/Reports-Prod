@@ -59,9 +59,14 @@ export const getValues = async (req, res) => {
       if (value.comment && value.comment !== null) comments.push(value.comment);
     }
 
-    res
-      .status(201)
-      .json({ findings, suggestions, templates, emailData, services, comments });
+    res.status(201).json({
+      findings,
+      suggestions,
+      templates,
+      emailData: emailData.reverse(),
+      services,
+      comments,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
